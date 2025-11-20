@@ -1,0 +1,43 @@
+server:
+  port: 9011
+  forward-headers-strategy: framework
+
+spring:
+  application:
+    name: auth
+  datasource:
+    driver-class-name: org.postgresql.Driver
+    url: jdbc:postgresql://localhost:5432/localdatabase?currentSchema=walk-dog-dev
+    username: ${DB_USERNAME:user}
+    password: ${DB_PASSWORD:password}
+    hikari:
+      maximum-pool-size: 10
+      minimum-idle: 2
+      idle-timeout: 300000
+      max-lifetime: 900000
+      connection-timeout: 10000
+      validation-timeout: 5000
+      keepalive-time: 300000
+      connection-test-query: SELECT 1
+  jpa:
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.PostgreSQLDialect
+        format_sql: true
+    show-sql: false
+    database-platform: org.hibernate.dialect.PostgreSQLDialect
+    generate-ddl: false
+    hibernate:
+      ddl-auto: none
+    open-in-view: false
+
+logging:
+  level:
+    jdbc:
+      audit: OFF
+      resultset: OFF
+      sqlonly: OFF
+      sqltiming: INFO
+      connection: OFF
+      resultsettable: OFF
+
