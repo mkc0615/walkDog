@@ -24,7 +24,7 @@ class Walk(
     val id: Long = 0
 
     @Column(nullable = false)
-    val appUserId: String = params.appUserId
+    val appUserId: Long = params.appUserId
 
     @Column(length = 255)
     var title: String = params.title

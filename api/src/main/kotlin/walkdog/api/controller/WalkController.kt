@@ -4,8 +4,8 @@ import org.springframework.web.bind.annotation.*
 import walkdog.api.domain.walks.model.dto.WalkCreateParam
 import walkdog.api.domain.walks.model.dto.WalkResponse
 import walkdog.api.domain.walks.model.dto.WalkUpdateParam
-import walkdog.api.service.WalkCommand
-import walkdog.api.service.WalkQuery
+import walkdog.api.service.walks.WalkCommand
+import walkdog.api.service.walks.WalkQuery
 
 @RestController
 @RequestMapping("/api/v1/walks")
@@ -14,10 +14,9 @@ class WalkController(
     private val walkCommand: WalkCommand
 ) {
 
-    @GetMapping
-    fun getAllWalks(): List<WalkResponse> {
-        val userId = ""
-        return walkQuery.findAllByAppUserId(userId)
+    @GetMapping("/{id}")
+    fun getAllWalks(@PathVariable id: Long): List<WalkResponse> {
+        return walkQuery.findAllByAppUserId(id)
     }
 
     @PostMapping

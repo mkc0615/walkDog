@@ -1,101 +1,101 @@
 package walkdog.api.config
 
+import io.swagger.v3.oas.models.Components
 import io.swagger.v3.oas.models.OpenAPI
 import io.swagger.v3.oas.models.Operation
 import io.swagger.v3.oas.models.PathItem
+import io.swagger.v3.oas.models.examples.Example
 import io.swagger.v3.oas.models.info.Info
 import io.swagger.v3.oas.models.media.Content
 import io.swagger.v3.oas.models.media.MediaType
 import io.swagger.v3.oas.models.media.Schema
 import io.swagger.v3.oas.models.responses.ApiResponse
 import io.swagger.v3.oas.models.responses.ApiResponses
+import io.swagger.v3.oas.models.security.OAuthFlow
+import io.swagger.v3.oas.models.security.OAuthFlows
 import io.swagger.v3.oas.models.security.SecurityRequirement
 import io.swagger.v3.oas.models.security.SecurityScheme
 import org.springdoc.core.customizers.OpenApiCustomizer
+import org.springdoc.core.customizers.OperationCustomizer
+import org.springframework.beans.factory.annotation.Value
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
+import walkdog.api.exception.ApiErrorExample
+import walkdog.api.exception.ApiErrorExamples
+import walkdog.api.exception.ApiErrorType
+import walkdog.api.exception.WalkDogErrorResponse
 
 @Configuration
 class OpenApiConfig {
+    @Value("\${walkdog.oauth.token-uri}")
+    private lateinit var tokenUri: String
+
     @Bean
     fun customOpenApi(): OpenAPI {
         return OpenAPI()
-            .info(
-                Info().title("WalkDog Auth API")
-                    .version("v1.0.0")
-                    .description("WalkDog Auth API")
+            .components(createSecurityScheme())
+            .info(createApiInfo())
+            .addSecurityItem(SecurityRequirement().addList("oauth2"))
+    }
+
+    private fun createSecurityScheme(): Components {
+        val securitySchemes = SecurityScheme()
+            .type(SecurityScheme.Type.OAUTH2)
+            .flows(
+                OAuthFlows().password(OAuthFlow().tokenUrl(tokenUri))
             )
-            .components(
-                io.swagger.v3.oas.models.Components().addSecuritySchemes(
-                    "basicAuth",
-                    SecurityScheme()
-                        .type(SecurityScheme.Type.HTTP)
-                        .scheme("basic")
-                )
-            )
-            .addSecurityItem(SecurityRequirement().addList("basicAuth"))
+        return Components().addSecuritySchemes("oauth2", securitySchemes)
+    }
+
+    private fun createApiInfo(): Info {
+        return Info()
+            .apply {
+                title = "Walkdog API"
+                version = "1.0.0"
+                description = "Walkdog Server API"
+            }
     }
 
     @Bean
-    fun openApiCustomizer(): OpenApiCustomizer {
-        return OpenApiCustomizer { openApi ->
-            val tokenPathItem = PathItem().post(
-                Operation()
-                    .tags(listOf("oauth2-controller"))
-                    .operationId("token")
-                    .summary("request access token")
-                    .description("Login with Email")
-                    .requestBody(
-                        io.swagger.v3.oas.models.parameters.RequestBody()
-                            .description("OAuth2 token request")
-                            .content(
-                                Content().addMediaType("application/x-www-form-urlencoded",
-                                    MediaType().schema(
-                                        Schema<Any>().type("object")
-                                            .addProperty("grant_type",
-                                                Schema<String>().nullable(false).type("string")
-                                                    .apply { enum = listOf("password") }
-                                            )
-                                            .addProperty("username", Schema<String>().nullable(false).type("string").description("user email as id"))
-                                            .addProperty("password", Schema<String>().nullable(false).type("string").description("password to login"))
-                                    )
-                                )
-                            )
-                    )
-                    .responses(
-                        ApiResponses()
-                            .addApiResponse("200", ApiResponse()
-                                .description("OK")
-                                .content(
-                                    Content().addMediaType(
-                                        "application/json",
-                                        MediaType().schema(
-                                            Schema<Any>().type("object")
-                                                .addProperty("access_token", Schema<String>().type("string"))
-                                                .addProperty("token_type", Schema<String>().type("string"))
-                                                .addProperty("scope", Schema<String>().type("string"))
-                                                .addProperty("expires_in", Schema<Int>().type("integer").format("int32"))
-                                        )
-                                    )
-                                )
-                            )
-                            .addApiResponse("400", ApiResponse()
-                                .description("Bad Request")
-                                .content(
-                                    Content().addMediaType(
-                                        "application/json",
-                                        MediaType().schema(
-                                            Schema<Any>().type("object")
-                                                .addProperty("error", Schema<Any>().type("string"))
-                                                .addProperty("error_description", Schema<Any>().type("string"))
-                                        )
-                                    )
-                                )
-                            )
-                    )
-            )
+    fun customize(): OperationCustomizer = OperationCustomizer { operation, handlerMethod ->
+        handlerMethod.getMethodAnnotation(ApiErrorExamples::class.java)?.let {
+            operation.addErrorResponses(it.value)
+        } ?: handlerMethod.getMethodAnnotation(ApiErrorExample::class.java)?.let {
+            operation.addErrorResponse(it.value)
+        }
+        operation
+    }
 
-            openApi.paths.addPathItem("/oauth2/token", tokenPathItem)
+    private fun Operation.addErrorResponses(errors: Array<ApiErrorType>) {
+        errors.groupBy {
+            it.httpStatus.value().toString()
+        }.forEach { (status, errors) ->
+            responses.addApiResponse(status, ApiResponse().content(createContent(errors)))
+        }
+    }
+
+    private fun Operation.addErrorResponse(error: ApiErrorType) {
+        responses.addApiResponse(
+            error.httpStatus.value().toString(),
+            ApiResponse().content(createContent(listOf(error)))
+        )
+    }
+
+    private fun createContent(errors: List<ApiErrorType>): Content {
+        val mediaType = MediaType().apply {
+            errors.forEach { error ->
+                addExamples(error.name, createExample(error))
+            }
+        }
+        return Content().addMediaType("application/json", mediaType)
+    }
+
+    private fun createExample(error: ApiErrorType): Example {
+        return Example().apply {
+            value = WalkDogErrorResponse(
+                code = error.code,
+                message = error.message,
+            )
         }
     }
 }

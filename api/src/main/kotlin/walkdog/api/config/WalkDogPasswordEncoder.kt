@@ -3,15 +3,16 @@ package walkdog.api.config
 import org.springframework.security.crypto.password.PasswordEncoder
 import java.security.MessageDigest
 
-class FreshPasswordEncoder : PasswordEncoder {
+class WalkDogPasswordEncoder : PasswordEncoder {
     override fun encode(rawPassword: CharSequence?): String {
         requireNotNull(rawPassword) {
-            "rawPassword is required"
+            "rawPassword should not be null"
         }
+
         if (rawPassword.toString().startsWith("{noop}")) {
             return rawPassword.toString()
         }
-        return rawPassword.toString()
+        return getSHA512Pw(rawPassword)
     }
 
     override fun matches(rawPassword: CharSequence?, encodedPassword: String?): Boolean {

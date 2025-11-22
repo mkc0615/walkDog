@@ -4,5 +4,5 @@ import org.springframework.data.jpa.repository.JpaRepository
 import walkdog.api.domain.walks.model.Walk
 
 interface WalkRepository : JpaRepository<Walk, Long> {
-    fun findAllByAppUserId(appUserId: String): List<Walk>
+    fun findAllByAppUserId(appUserId: Long): List<Walk>
 }

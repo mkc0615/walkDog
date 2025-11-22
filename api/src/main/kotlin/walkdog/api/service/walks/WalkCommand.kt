@@ -1,4 +1,4 @@
-package walkdog.api.service
+package walkdog.api.service.walks
 
 import jakarta.transaction.Transactional
 import org.springframework.stereotype.Service
