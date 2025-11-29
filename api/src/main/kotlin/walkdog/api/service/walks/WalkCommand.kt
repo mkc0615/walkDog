@@ -37,12 +37,12 @@ class WalkCommand(
         walk.start()
     }
 
-    fun endWalk(walkId: Long) {
+    fun stopWalk(walkId: Long) {
         val walk = walkRepository.findById(walkId).orElse(null)
         if (walk == null) {
             throw IllegalArgumentException("cannot find walk")
         }
-        walk.end()
+        walk.stop()
     }
 
     fun removeWalk(id: Long) {

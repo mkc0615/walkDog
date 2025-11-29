@@ -7,6 +7,7 @@ import jakarta.persistence.GenerationType
 import jakarta.persistence.Id
 import jakarta.persistence.Table
 import walkdog.api.domain.common.BaseEntity
+import walkdog.api.domain.dogs.model.dto.DogCreateParam
 
 @Entity
 @Table(name = "dogs")
@@ -24,6 +25,8 @@ class Dog(
     @Column
     val gender: String,
     @Column
+    val activity: Double,
+    @Column
     val description: String,
 ): BaseEntity() {
     @Id
@@ -39,6 +42,7 @@ class Dog(
                 params.age,
                 params.weight,
                 params.gender,
+                params.activity,
                 params.description
             )
         }

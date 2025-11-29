@@ -10,7 +10,6 @@ import walkdog.api.domain.common.BaseEntity
 import walkdog.api.domain.walks.model.dto.WalkCreateParam
 import walkdog.api.domain.walks.model.dto.WalkUpdateParam
 import java.time.Duration
-import java.time.LocalDate
 import java.time.LocalDateTime
 import java.time.ZoneId
 
@@ -33,7 +32,7 @@ class Walk(
     val date: LocalDateTime = params.date
 
     @Column
-    var distance: Double = 0.0
+    var distance: Double = 0.00
 
     @Column(length = 255)
     var description: String = params.description ?: ""
@@ -45,7 +44,10 @@ class Walk(
     var endedAt: LocalDateTime? = null
 
     @Column
-    var duration: Long = 0
+    var duration: Double = 0.00
+
+    @Column
+    var caloriesBurned: Double = 0.00
 
     fun update(params: WalkUpdateParam): Walk {
         this.title = params.title ?: this.title
@@ -57,7 +59,7 @@ class Walk(
         this.startedAt = LocalDateTime.now()
     }
 
-    fun end() {
+    fun stop() {
         val startTime = startedAt ?: LocalDateTime.now()
         val current = LocalDateTime.now()
         this.endedAt = current
@@ -65,6 +67,6 @@ class Walk(
         val zone = ZoneId.systemDefault()
         val newDuration = Duration.between(startTime.atZone(zone), current.atZone(zone)).toMillis()
 
-        this.duration = newDuration
+        this.duration = newDuration.toDouble()
     }
 }

@@ -8,7 +8,6 @@ class WalkDogPasswordEncoder: PasswordEncoder {
         requireNotNull(rawPassword) {
             "rawPassword should not be null"
         }
-
         if (rawPassword.toString().startsWith("{noop}")) {
             return rawPassword.toString()
         }

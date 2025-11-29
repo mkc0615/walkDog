@@ -1,4 +1,4 @@
-package walkdog.api.domain.appUsers.model
+package walkdog.api.domain.appUsers.model.dto
 
 data class OwnerParam(
     val name: String,

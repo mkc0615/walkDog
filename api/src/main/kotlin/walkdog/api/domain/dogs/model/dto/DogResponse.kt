@@ -1,4 +1,6 @@
-package walkdog.api.domain.dogs.model
+package walkdog.api.domain.dogs.model.dto
+
+import walkdog.api.domain.dogs.model.Dog
 
 data class DogResponse(
     val dogId: Long,

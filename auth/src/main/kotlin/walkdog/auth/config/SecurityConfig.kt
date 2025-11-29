@@ -41,14 +41,6 @@ import java.security.interfaces.RSAPublicKey
 @Configuration
 @EnableWebSecurity
 class SecurityConfig {
-//    curl --location 'http://localhost:9000/oauth2/token'
-//    --header 'Content-Type: application/x-www-form-urlencoded'
-//    --header 'Accept: application/json;charset=UTF-8'
-//    --header 'Authorization: Basic e3tiYXNpY0F1dGhVc2VybmFtZX19Ont7YmFzaWNBdXRoUGFzc3dvcmR9fQ=='
-//    --data-urlencode 'refresh_token=<string>'
-//    --data-urlencode 'password=<string>'
-//    --data-urlencode 'grant_type=<string>'
-//    --data-urlencode 'username=<string>'
     @Bean
     @Throws(Exception::class)
     fun authorizationFilterChain(
@@ -108,7 +100,6 @@ class SecurityConfig {
         val accessTokenGenerator = OAuth2AccessTokenGenerator()
         return DelegatingOAuth2TokenGenerator(jwtGenerator, accessTokenGenerator)
     }
-    // keytool -genkeypair -alias walkdogjwt -keyalg RSA -keysize 2048 -validity 3650 -keystore walkdog.jks -storepass walkdogjks
     @Bean
     fun jwkSource(): JWKSource<SecurityContext> {
         val keyStoreResource = ClassPathResource("walkdog.jks")

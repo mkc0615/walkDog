@@ -1,6 +1,8 @@
 package walkdog.api.controller
 
 import org.springframework.web.bind.annotation.*
+import walkdog.api.annotation.LoginUserContext
+import walkdog.api.domain.common.LoginUserDetail
 import walkdog.api.domain.walks.model.dto.WalkCreateParam
 import walkdog.api.domain.walks.model.dto.WalkResponse
 import walkdog.api.domain.walks.model.dto.WalkUpdateParam
@@ -13,9 +15,11 @@ class WalkController(
     private val walkQuery: WalkQuery,
     private val walkCommand: WalkCommand
 ) {
-
-    @GetMapping("/{id}")
-    fun getAllWalks(@PathVariable id: Long): List<WalkResponse> {
+    @GetMapping
+    fun getAllWalks(
+        @LoginUserContext userContext: LoginUserDetail
+    ): List<WalkResponse> {
+        val id = userContext.id
         return walkQuery.findAllByAppUserId(id)
     }
 
@@ -34,9 +38,9 @@ class WalkController(
         return walkCommand.startWalk(id)
     }
 
-    @PatchMapping("{id}/end")
-    fun endWalk(@PathVariable id: Long) {
-        return walkCommand.endWalk(id)
+    @PatchMapping("{id}/stop")
+    fun stopWalk(@PathVariable id: Long) {
+        return walkCommand.stopWalk(id)
     }
 
     @DeleteMapping("{id}")

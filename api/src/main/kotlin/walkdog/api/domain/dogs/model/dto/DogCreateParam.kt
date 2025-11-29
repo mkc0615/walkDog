@@ -1,4 +1,4 @@
-package walkdog.api.domain.dogs.model
+package walkdog.api.domain.dogs.model.dto
 
 data class DogCreateParam(
     val name: String,
@@ -6,5 +6,6 @@ data class DogCreateParam(
     val age: Int,
     val weight: Long,
     val gender: String,
+    val activity: Double,
     val description: String,
 )

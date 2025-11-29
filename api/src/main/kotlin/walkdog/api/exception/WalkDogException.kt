@@ -1,6 +1,6 @@
 package walkdog.api.exception
 
-class WalkDogException(
+open class WalkDogException(
     commonError: WalkDogError,
     additionalMessage: String = "",
     val details: List<String> = emptyList()

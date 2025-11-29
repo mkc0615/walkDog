@@ -5,8 +5,7 @@ import org.springframework.security.crypto.password.PasswordEncoder
 import org.springframework.stereotype.Service
 import walkdog.api.domain.appUsers.AppUserRepository
 import walkdog.api.domain.appUsers.model.AppUser
-import walkdog.api.domain.appUsers.model.OwnerParam
-import walkdog.api.domain.appUsers.model.OwnerResponse
+import walkdog.api.domain.appUsers.model.dto.OwnerParam
 
 @Service
 @Transactional

@@ -1,7 +1,9 @@
-package walkdog.api.domain.appUsers.model
+package walkdog.api.domain.appUsers.model.dto
 
+import walkdog.api.domain.appUsers.model.AppUser
+import walkdog.api.domain.appUsers.model.AppUserProfile
 import walkdog.api.domain.dogs.model.Dog
-import walkdog.api.domain.dogs.model.DogResponse
+import walkdog.api.domain.dogs.model.dto.DogResponse
 
 data class OwnerResponse(
     val userId: Long,
@@ -10,10 +12,10 @@ data class OwnerResponse(
     val myDogs: List<DogResponse>,
 ) {
     companion object {
-        fun create(appUser: AppUser, dogs: List<Dog>): OwnerResponse {
+        fun create(appUser: AppUser, profile: AppUserProfile, dogs: List<Dog>): OwnerResponse {
             return OwnerResponse(
                 appUser.id,
-                appUser.name,
+                profile.name,
                 appUser.email,
                 myDogs = dogs.map { DogResponse.create(it) }
             )

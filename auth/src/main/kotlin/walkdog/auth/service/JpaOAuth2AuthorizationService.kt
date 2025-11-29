@@ -15,12 +15,9 @@ import org.springframework.security.oauth2.server.authorization.jackson2.OAuth2A
 import org.springframework.stereotype.Component
 import org.springframework.util.Assert
 import org.springframework.util.StringUtils
-import walkdog.auth.domain.model.entity.AppUser
 import walkdog.auth.domain.model.entity.Authorization
 import walkdog.auth.domain.repository.AuthorizationRepository
-import java.util.Optional
-import javax.swing.text.html.Option
-import kotlin.math.PI
+import java.util.*
 
 @Component
 class JpaOAuth2AuthorizationService(

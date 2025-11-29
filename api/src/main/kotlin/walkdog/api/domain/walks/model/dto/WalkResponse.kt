@@ -8,7 +8,7 @@ data class WalkResponse(
     val title: String,
     val date: LocalDateTime,
     val distance: Double,
-    val duration: Long,
+    val duration: Double,
 ) {
     companion object {
         fun create(walk: Walk): WalkResponse {

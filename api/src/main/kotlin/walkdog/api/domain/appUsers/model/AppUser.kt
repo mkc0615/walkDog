@@ -6,12 +6,11 @@ import jakarta.persistence.GeneratedValue
 import jakarta.persistence.GenerationType
 import jakarta.persistence.Id
 import jakarta.persistence.Table
+import walkdog.api.domain.appUsers.model.dto.OwnerParam
 
 @Entity
-@Table(name = "app_user")
+@Table(name = "app_users")
 class AppUser(
-    @Column(name = "name", nullable = false)
-    var name: String,
     @Column(name = "email", nullable = false)
     var email: String,
     @Column(name = "password", nullable = false)
@@ -22,10 +21,9 @@ class AppUser(
     val id: Long = 0
 
     @Column
-    val isUsed = "Y"
+    val isDeleted = "N"
 
     fun update(params: OwnerParam) {
-        this.name = params.name
         this.email = params.email
         this.password = params.password
     }
@@ -33,7 +31,6 @@ class AppUser(
     companion object {
         fun create(params: OwnerParam): AppUser {
             return AppUser(
-                params.name,
                 params.email,
                 params.password
             )
