@@ -22,3 +22,17 @@ data class WalkResponse(
         }
     }
 }
+
+data class WalkCreateResponse(
+    val walkId: Long,
+    val status: WalkStatus,
+) {
+    companion object {
+        fun create(walkId: Long, status: WalkStatus): WalkCreateResponse {
+            return WalkCreateResponse(
+                walkId,
+                status
+            )
+        }
+    }
+}

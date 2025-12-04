@@ -5,9 +5,11 @@ import jakarta.persistence.Entity
 import jakarta.persistence.GeneratedValue
 import jakarta.persistence.GenerationType
 import jakarta.persistence.Id
+import jakarta.persistence.Table
 import java.time.LocalDateTime
 
 @Entity
+@Table(name = "walk_tracks")
 class WalkCoordinates(
     @Column
     private val walkId: Long,
@@ -16,13 +18,12 @@ class WalkCoordinates(
     @Column
     private val longitude: Double,
     @Column
-    private val sequenceIndex: Int
+    private val sequence: Int
 ) {
-
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     val id: Long = 0
 
     @Column
-    private val dateTime = LocalDateTime.now()
+    private val createdAt = LocalDateTime.now()
 }

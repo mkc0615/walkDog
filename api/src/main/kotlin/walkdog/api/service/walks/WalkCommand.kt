@@ -4,6 +4,7 @@ import jakarta.transaction.Transactional
 import org.springframework.stereotype.Service
 import walkdog.api.domain.walks.model.Walk
 import walkdog.api.domain.walks.model.dto.WalkCreateParam
+import walkdog.api.domain.walks.model.dto.WalkCreateResponse
 import walkdog.api.domain.walks.model.dto.WalkResponse
 import walkdog.api.domain.walks.model.dto.WalkUpdateParam
 import walkdog.api.domain.walks.repository.WalkRepository
@@ -13,10 +14,10 @@ import walkdog.api.domain.walks.repository.WalkRepository
 class WalkCommand(
     private val walkRepository: WalkRepository
 ) {
-    fun createWalk(params: WalkCreateParam): WalkResponse {
-        val walk = Walk(params)
+    fun createWalk(userId: Long, params: WalkCreateParam): WalkCreateResponse {
+        val walk = Walk(userId, params)
         val result = walkRepository.save(walk)
-        return WalkResponse.create(result)
+        return WalkCreateResponse.create(result.id, result.status)
     }
 
     fun updateWalk(id: Long, params: WalkUpdateParam): WalkResponse {
@@ -37,12 +38,12 @@ class WalkCommand(
         walk.start()
     }
 
-    fun stopWalk(walkId: Long) {
+    fun finishWalk(walkId: Long) {
         val walk = walkRepository.findById(walkId).orElse(null)
         if (walk == null) {
             throw IllegalArgumentException("cannot find walk")
         }
-        walk.stop()
+        walk.finish()
     }
 
     fun removeWalk(id: Long) {

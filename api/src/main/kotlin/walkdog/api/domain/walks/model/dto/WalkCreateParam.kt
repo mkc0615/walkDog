@@ -1,11 +1,10 @@
 package walkdog.api.domain.walks.model.dto
 
-import java.time.LocalDateTime
-
 data class WalkCreateParam (
-    val id: Long,
-    val appUserId: Long,
-    val date: LocalDateTime,
-    val title: String,
+    val walkId: Long,
+    val dogIds: List<Long>,
+    val title: String?,
     val description: String?,
+    val startLongitude: Double,
+    val startLatitude: Double
 )

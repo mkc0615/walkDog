@@ -4,7 +4,7 @@ import walkdog.api.domain.dogs.model.Dog
 
 data class DogResponse(
     val dogId: Long,
-    val dogName: String,
+    val name: String,
     val dogType: String,
     val age: Int,
     val description: String

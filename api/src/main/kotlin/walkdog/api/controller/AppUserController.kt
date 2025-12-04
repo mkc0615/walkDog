@@ -5,8 +5,8 @@ import org.springframework.web.bind.annotation.*
 import walkdog.api.domain.appUsers.model.dto.OwnerParam
 import walkdog.api.domain.appUsers.model.dto.OwnerResponse
 import walkdog.api.domain.dogs.model.dto.DogCreateParam
-import walkdog.api.service.appUsers.AppUserCommand
-import walkdog.api.service.appUsers.AppUserQuery
+import walkdog.api.service.users.AppUserCommand
+import walkdog.api.service.users.AppUserQuery
 import walkdog.api.service.dogs.DogCommand
 
 @RestController
@@ -23,18 +23,13 @@ class AppUserController(
         return params;
     }
 
-    @GetMapping("/{id}")
+    @GetMapping("/me")
     fun getOwner(@PathVariable id: Long): OwnerResponse {
         return appUserQuery.getAppUsersAndDogs(id)
     }
 
-    @PostMapping("/{id}")
+    @PostMapping("/me")
     fun updateOwner(@PathVariable id: String, @RequestBody params: OwnerParam) {
         appUserCommand.update(params)
-    }
-
-    @PostMapping("/{id}/dogs")
-    fun addOwnerDog(@PathVariable id : Long, @RequestBody params: DogCreateParam) {
-        dogCommand.create(id, params)
     }
 }

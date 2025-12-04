@@ -2,6 +2,8 @@ package walkdog.api.domain.dogs.model
 
 import jakarta.persistence.Column
 import jakarta.persistence.Entity
+import jakarta.persistence.EnumType
+import jakarta.persistence.Enumerated
 import jakarta.persistence.GeneratedValue
 import jakarta.persistence.GenerationType
 import jakarta.persistence.Id
@@ -16,7 +18,8 @@ class Dog(
     val appUserId: Long,
     @Column
     val name: String,
-    @Column
+    @Column(name = "dog_type")
+    @Enumerated(EnumType.STRING)
     val dogBreed: DogBreed,
     @Column
     val age: Int,

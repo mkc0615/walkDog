@@ -5,7 +5,6 @@ import org.springframework.security.core.Authentication
 import org.springframework.security.core.AuthenticationException
 import org.springframework.security.oauth2.core.OAuth2AuthenticationException
 import org.springframework.security.oauth2.core.OAuth2Error
-import org.springframework.security.oauth2.server.authorization.authentication.OAuth2ClientAuthenticationContext
 import org.springframework.security.oauth2.server.authorization.authentication.OAuth2ClientAuthenticationToken
 import org.springframework.security.oauth2.server.authorization.client.RegisteredClientRepository
 import walkdog.auth.exception.AuthErrorType

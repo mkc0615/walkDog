@@ -1,4 +1,4 @@
-package walkdog.api.service.appUsers
+package walkdog.api.service.users
 
 import org.springframework.security.crypto.password.PasswordEncoder
 import walkdog.api.config.WalkDogPasswordEncoder
