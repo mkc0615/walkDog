@@ -5,15 +5,15 @@ import org.springframework.transaction.annotation.Transactional
 import walkdog.api.domain.walks.model.dto.WalkResponse
 import walkdog.api.domain.walks.model.dto.WalkStatResponse
 import walkdog.api.domain.walks.repository.WalkRepository
-import java.lang.System.console
+import walkdog.api.domain.walks.repository.WalkStatRepository
 
 @Service
 @Transactional(readOnly = true)
 class WalkQuery(
-    private val walkRepository: WalkRepository
+    private val walkRepository: WalkRepository,
+    private val walkStatRepository: WalkStatRepository
 ) {
     fun findAllByAppUserId(appUserId: Long): List<WalkResponse> {
-        println("appUserId = $appUserId")
         try {
             val walks = walkRepository.findAllByAppUserId(appUserId)
             return walks.map { walk ->
@@ -26,14 +26,7 @@ class WalkQuery(
     }
 
     fun findUserWalkStats(appUserId: Long): WalkStatResponse {
-        return WalkStatResponse(
-            0,
-            0.0,
-            0.0,
-            0.0,
-            0.0,
-            0.0,
-            0.0,
-        )
+        val stats = walkStatRepository.findByAppUserId(appUserId)
+        return WalkStatResponse.create(stats)
     }
 }

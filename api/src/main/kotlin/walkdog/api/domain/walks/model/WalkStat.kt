@@ -11,7 +11,6 @@ import walkdog.api.domain.common.BaseEntity
 @Entity
 @Table(name = "walk_stats")
 class WalkStat(
-
     @Column
     val appUserId : Long
 ): BaseEntity() {
@@ -44,11 +43,15 @@ class WalkStat(
         totalWalkCount++
     }
 
-    fun updateTotals() {
-
+    fun updateTotals(duration: Double, distance: Double, calories: Double) {
+        this.totalDuration += duration
+        this.totalDistance += distance
+        this.totalCalories += calories
     }
 
     fun updateAverages() {
-
+        this.averageDistance = this.totalDistance / totalWalkCount
+        this.averageDuration = this.averageDuration / totalWalkCount
+        this.averageCalories = this.averageCalories / totalWalkCount
     }
 }

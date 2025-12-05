@@ -6,11 +6,14 @@ import org.springframework.stereotype.Service
 import walkdog.api.domain.appUsers.AppUserRepository
 import walkdog.api.domain.appUsers.model.AppUser
 import walkdog.api.domain.appUsers.model.dto.OwnerParam
+import walkdog.api.domain.walks.model.WalkStat
+import walkdog.api.domain.walks.repository.WalkStatRepository
 
 @Service
 @Transactional
 class AppUserCommand(
     private val appUserRepository: AppUserRepository,
+    private val walkStatRepository: WalkStatRepository,
     private val passwordEncoder: PasswordEncoder
 ) {
     fun create(params: OwnerParam) {
@@ -19,11 +22,12 @@ class AppUserCommand(
 
         val appUser = AppUser.create(params)
         appUserRepository.save(appUser)
+
+        val walkStats = WalkStat(appUser.id)
+        walkStatRepository.save(walkStats)
     }
 
-    fun update(params: OwnerParam) {
-        val appUser = AppUser.create(params)
-        appUser.update(params)
-        appUserRepository.save(appUser)
+    fun update(appUserId: Long, params: OwnerParam) {
+        // TODO: update user info
     }
 }

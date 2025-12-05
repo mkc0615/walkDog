@@ -1,20 +1,11 @@
 package walkdog.api.domain.walks.model
 
-import jakarta.persistence.Column
-import jakarta.persistence.Entity
-import jakarta.persistence.EnumType
-import jakarta.persistence.Enumerated
-import jakarta.persistence.GeneratedValue
-import jakarta.persistence.GenerationType
-import jakarta.persistence.Id
-import jakarta.persistence.Table
+import jakarta.persistence.*
 import walkdog.api.domain.common.BaseEntity
 import walkdog.api.domain.walks.model.dto.WalkCreateParam
 import walkdog.api.domain.walks.model.dto.WalkStatus
 import walkdog.api.domain.walks.model.dto.WalkUpdateParam
-import java.time.Duration
 import java.time.LocalDateTime
-import java.time.ZoneId
 
 @Entity
 @Table(name = "walks")
@@ -73,15 +64,9 @@ class Walk(
         this.startedAt = LocalDateTime.now()
     }
 
-    fun finish() {
-        val startTime = startedAt ?: LocalDateTime.now()
-        val current = LocalDateTime.now()
-        this.endedAt = current
-
-        val zone = ZoneId.systemDefault()
-        val newDuration = Duration.between(startTime.atZone(zone), current.atZone(zone)).toMillis()
-
-        this.duration = newDuration.toDouble()
+    fun finish(duration: Double, distance: Double) {
+        this.duration = duration
+        this.distance = distance
         this.status = WalkStatus.FINISHED
     }
 }

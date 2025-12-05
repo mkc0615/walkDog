@@ -17,8 +17,6 @@ class WalkCoordinates(
     private val latitude: Double,
     @Column
     private val longitude: Double,
-    @Column
-    private val sequence: Int
 ) {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

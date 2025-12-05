@@ -5,6 +5,7 @@ import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.RestController
 import walkdog.api.annotation.LoginUserContext
 import walkdog.api.domain.common.LoginUserDetail
+import walkdog.api.domain.walks.model.dto.WalkStatResponse
 import walkdog.api.service.users.AppUserQuery
 import walkdog.api.service.walks.WalkQuery
 
@@ -17,7 +18,7 @@ class HomeController(
     @GetMapping
     fun getHomeInfo(
         @LoginUserContext userContext: LoginUserDetail
-    ) {
-        val walkStats = walkQuery.findUserWalkStats(userContext.id)
+    ): WalkStatResponse {
+        return walkQuery.findUserWalkStats(userContext.id)
     }
 }
