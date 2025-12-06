@@ -25,6 +25,14 @@ class WalkController(
         return walkQuery.findAllByAppUserId(userContext.id)
     }
 
+    @GetMapping("/{walkId}")
+    fun getWalk(
+        @LoginUserContext userContext: LoginUserDetail,
+        @PathVariable walkId: Long
+    ): WalkResponse {
+        return walkQuery.findWalk(userContext.id, walkId)
+    }
+
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
     fun createWalk(

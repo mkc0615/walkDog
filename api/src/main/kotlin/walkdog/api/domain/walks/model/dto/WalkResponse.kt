@@ -6,18 +6,24 @@ import java.time.LocalDateTime
 data class WalkResponse(
     val id: Long,
     val title: String,
-    val date: LocalDateTime,
     val distance: Double,
     val duration: Double,
+    val description: String?,
+    val startedAt: LocalDateTime?,
+    val endedAt: LocalDateTime?,
+    val dogIds: List<Long>,
 ) {
     companion object {
         fun create(walk: Walk): WalkResponse {
             return WalkResponse(
                 id = walk.id,
                 title = walk.title,
-                date = walk.date,
+                description = walk.description,
                 distance = walk.distance,
-                duration = walk.duration
+                duration = walk.duration,
+                startedAt = walk.startedAt,
+                endedAt = walk.endedAt,
+                dogIds = listOf()
             )
         }
     }

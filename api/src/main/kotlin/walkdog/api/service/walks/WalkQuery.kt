@@ -1,5 +1,6 @@
 package walkdog.api.service.walks
 
+import org.springframework.data.crossstore.ChangeSetPersister
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
 import walkdog.api.domain.walks.model.dto.WalkResponse
@@ -23,6 +24,15 @@ class WalkQuery(
             println("ex.message = ${ex.message}")
         }
         return emptyList()
+    }
+
+    fun findWalk(appUserId: Long, walkId: Long): WalkResponse {
+        val walk = walkRepository.findById(walkId)
+        .orElseThrow {
+            IllegalArgumentException("Could not find walk $walkId")
+        }
+
+        return WalkResponse.create(walk)
     }
 
     fun findUserWalkStats(appUserId: Long): WalkStatResponse {
