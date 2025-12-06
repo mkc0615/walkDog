@@ -32,9 +32,11 @@ class WalkCommand(
         return WalkCreateResponse.create(walkSaved.id, walkSaved.status)
     }
 
-    fun updateCoordinates(walkId: Long, params: WalkPositionParam) {
-        val track = WalkCoordinates(walkId, params.latitude, params.longitude)
-        walkTrackRepository.save(track)
+    fun updateCoordinates(walkId: Long, coordinates: List<WalkPositionParam>) {
+        val tracks = coordinates.map { track ->
+            WalkCoordinates(walkId, track)
+        }
+        walkTrackRepository.saveAll(tracks)
     }
 
     fun finishWalk(appUserId: Long, walkId: Long, params: WalkResultParam) {

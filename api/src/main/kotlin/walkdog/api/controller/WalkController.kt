@@ -9,6 +9,7 @@ import walkdog.api.domain.walks.model.dto.WalkCreateResponse
 import walkdog.api.domain.walks.model.dto.WalkPositionParam
 import walkdog.api.domain.walks.model.dto.WalkResponse
 import walkdog.api.domain.walks.model.dto.WalkResultParam
+import walkdog.api.domain.walks.model.dto.WalkTrackParam
 import walkdog.api.service.walks.WalkCommand
 import walkdog.api.service.walks.WalkQuery
 
@@ -46,9 +47,9 @@ class WalkController(
     fun trackWalk(
         @LoginUserContext userContext: LoginUserDetail,
         @PathVariable("walkId") walkId: Long,
-        @RequestBody params: WalkPositionParam
+        @RequestBody params: WalkTrackParam
     ) {
-        walkCommand.updateCoordinates(walkId, params)
+        walkCommand.updateCoordinates(walkId, params.coordinates)
     }
 
     @PostMapping("{walkId}/stop")
