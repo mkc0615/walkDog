@@ -7,7 +7,7 @@ spring:
     name: auth
   datasource:
     driver-class-name: org.postgresql.Driver
-    url: jdbc:postgresql://localhost:5432/localdatabase?currentSchema=walk-dog-dev
+    url: ${DB_URL:jdbc:postgresql://localhost:5432/database_name}
     username: ${DB_USERNAME:user}
     password: ${DB_PASSWORD:password}
     hikari:
