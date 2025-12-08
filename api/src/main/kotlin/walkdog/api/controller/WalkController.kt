@@ -10,6 +10,7 @@ import walkdog.api.domain.walks.model.dto.WalkPositionParam
 import walkdog.api.domain.walks.model.dto.WalkResponse
 import walkdog.api.domain.walks.model.dto.WalkResultParam
 import walkdog.api.domain.walks.model.dto.WalkTrackParam
+import walkdog.api.domain.walks.model.dto.WalkUpdateParam
 import walkdog.api.service.walks.WalkCommand
 import walkdog.api.service.walks.WalkQuery
 
@@ -60,6 +61,15 @@ class WalkController(
         @RequestBody params: WalkResultParam
     ) {
         return walkCommand.finishWalk(userContext.id, walkId, params)
+    }
+
+    @PatchMapping("{walkId}")
+    fun updateDetails(
+        @LoginUserContext userContext: LoginUserDetail,
+        @PathVariable walkId: Long,
+        @RequestBody params: WalkUpdateParam
+    ) {
+        return walkCommand.updateDetails(walkId, params)
     }
 
     @DeleteMapping("{id}")

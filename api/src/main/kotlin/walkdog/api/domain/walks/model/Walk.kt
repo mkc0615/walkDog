@@ -53,10 +53,9 @@ class Walk(
     @Column
     val startLatitude: Double = params.startLatitude
 
-    fun update(params: WalkUpdateParam): Walk {
+    fun update(params: WalkUpdateParam) {
         this.title = params.title ?: this.title
         this.description = params.description ?: this.description
-        return this
     }
 
     fun start() {
@@ -68,5 +67,6 @@ class Walk(
         this.duration = duration
         this.distance = distance
         this.status = WalkStatus.FINISHED
+        this.endedAt = LocalDateTime.now()
     }
 }

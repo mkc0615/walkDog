@@ -9,6 +9,7 @@ import walkdog.api.domain.walks.model.dto.WalkCreateParam
 import walkdog.api.domain.walks.model.dto.WalkCreateResponse
 import walkdog.api.domain.walks.model.dto.WalkPositionParam
 import walkdog.api.domain.walks.model.dto.WalkResultParam
+import walkdog.api.domain.walks.model.dto.WalkUpdateParam
 import walkdog.api.domain.walks.repository.WalkDogRepository
 import walkdog.api.domain.walks.repository.WalkRepository
 import walkdog.api.domain.walks.repository.WalkStatRepository
@@ -24,6 +25,7 @@ class WalkCommand(
 ) {
     fun createWalk(userId: Long, params: WalkCreateParam): WalkCreateResponse {
         val walk = Walk(userId, params)
+        walk.start()
         val walkSaved = walkRepository.save(walk)
         val dogIds = params.dogIds
 
@@ -77,6 +79,13 @@ class WalkCommand(
     private fun calculateDogCalories(dogId: Long): Double {
         // TODO: calculate dog calories burned
         return 0.0
+    }
+
+    fun updateDetails(walkId: Long, params: WalkUpdateParam) {
+        val walk = walkRepository.findById(walkId).orElseThrow()
+            ?: throw IllegalArgumentException("cannot find walk")
+
+        walk.update(params)
     }
 
     fun removeWalk(id: Long) {

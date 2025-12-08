@@ -15,7 +15,8 @@ import java.time.LocalDateTime
 class WalkCoordinates(
     @Column
     private val walkId: Long,
-    private val params: WalkPositionParam
+
+    params: WalkPositionParam
 ) {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
