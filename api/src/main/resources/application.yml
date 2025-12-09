@@ -4,7 +4,7 @@ server:
 
 spring:
   application:
-    name: caribbean-api
+    name: walkdog-api
   datasource:
     driver-class-name: org.postgresql.Driver
     url: ${DB_URL:jdbc:postgresql://localhost:5432/database_name}
