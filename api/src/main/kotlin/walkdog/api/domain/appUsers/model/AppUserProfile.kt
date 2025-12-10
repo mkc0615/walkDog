@@ -13,7 +13,9 @@ class AppUserProfile(
     @Column
     var userId: Long,
     @Column
-    var name: String,
+    var email: String,
+    @Column
+    var weight: Double,
     @Column
     var imageUrl: String,
     @Column

@@ -44,7 +44,7 @@ class OpenApiConfig {
                     .tags(listOf("oauth2-controller"))
                     .operationId("token")
                     .summary("request access token")
-                    .description("Login with Email")
+                    .description("Login with username")
                     .requestBody(
                         io.swagger.v3.oas.models.parameters.RequestBody()
                             .description("OAuth2 token request")
@@ -56,7 +56,7 @@ class OpenApiConfig {
                                                 Schema<String>().nullable(false).type("string")
                                                     .apply { enum = listOf("password") }
                                             )
-                                            .addProperty("username", Schema<String>().nullable(false).type("string").description("user email as id"))
+                                            .addProperty("username", Schema<String>().nullable(false).type("string").description("username as id"))
                                             .addProperty("password", Schema<String>().nullable(false).type("string").description("password to login"))
                                     )
                                 )

@@ -18,7 +18,7 @@ class WalkDogUserDetails(
     }
 
     override fun getUsername(): String? {
-        return user.email
+        return user.username
     }
 
 }

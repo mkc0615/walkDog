@@ -1,6 +1,6 @@
 package walkdog.auth.domain.model.dto
 
 data class LoginRequest (
-    val email: String,
+    val username: String,
     val password: String
 )

@@ -16,7 +16,7 @@ class WalkDogUserDetailService(
     private val appUserRepository: AppUserRepository
 ) : UserDetailsService {
     override fun loadUserByUsername(username: String): UserDetails {
-        val user = appUserRepository.findByEmail(username)
+        val user = appUserRepository.findByUsername(username)
             ?: throw OAuth2AuthenticationException(
                 OAuth2Error(
                     AuthErrorType.USER_NOT_FOUND.code,

@@ -10,10 +10,8 @@ import jakarta.persistence.Table
 @Entity
 @Table(name = "app_users")
 class AppUser(
-    @Column(name = "name", nullable = false)
-    val name: String,
-    @Column(name = "email", nullable = false)
-    val email: String,
+    @Column(name = "username", nullable = false)
+    val username: String,
     @Column(name = "password", nullable = false)
     val password: String
 ) {
@@ -23,5 +21,4 @@ class AppUser(
 
     @Column
     val isDeleted = "N"
-
 }

@@ -2,6 +2,8 @@ package walkdog.api.service.walks
 
 import jakarta.transaction.Transactional
 import org.springframework.stereotype.Service
+import walkdog.api.domain.dogs.model.DogBreed
+import walkdog.api.domain.dogs.repository.DogRepository
 import walkdog.api.domain.walks.model.Walk
 import walkdog.api.domain.walks.model.WalkCoordinates
 import walkdog.api.domain.walks.model.WalkDog
@@ -22,6 +24,7 @@ class WalkCommand(
     private val walkStatRepository: WalkStatRepository,
     private val walkTrackRepository: WalkTrackRepository,
     private val walkDogRepository: WalkDogRepository,
+    private val dogRepository: DogRepository
 ) {
     fun createWalk(userId: Long, params: WalkCreateParam): WalkCreateResponse {
         val walk = Walk(userId, params)
@@ -59,10 +62,10 @@ class WalkCommand(
     }
 
     private fun updateWalkStats(appUserId: Long, params: WalkResultParam) {
-        val calories =  calculateCalories(params)
+        val calories =  calculateCalories(appUserId, params)
 
         val dogCalories = params.dogIds.map { dogId ->
-            calculateDogCalories(dogId)
+            calculateDogCalories(dogId, params.duration)
         }
 
         val stats = walkStatRepository.findByAppUserId(appUserId)
@@ -71,14 +74,19 @@ class WalkCommand(
         stats.updateAverages()
     }
 
-    private fun calculateCalories(params: WalkResultParam): Double {
-        // TODO: calculate calories burned
-        return 0.0
+    private fun calculateCalories(appUserId: Long, params: WalkResultParam): Double {
+        // calories = MET value x weight in kg x distance in km
+        val weight = 80.0
+        val metValue = getMetValueOfOwner(params.duration, params.distance)
+        return metValue * weight * params.distance
     }
 
-    private fun calculateDogCalories(dogId: Long): Double {
-        // TODO: calculate dog calories burned
-        return 0.0
+    private fun calculateDogCalories(dogId: Long, duration: Double): Double {
+        // dog calories(kcal) = weight in kg x duration in hours x activity factor x speed factor
+        val dog = dogRepository.findById(dogId).orElseThrow()
+        val speedFactor = dog.dogBreed.speedFactor
+        val activityFactor = dog.dogBreed.activityFactor
+        return dog.weight * duration * activityFactor * speedFactor
     }
 
     fun updateDetails(walkId: Long, params: WalkUpdateParam) {
@@ -90,5 +98,18 @@ class WalkCommand(
 
     fun removeWalk(id: Long) {
         walkRepository.deleteById(id)
+    }
+
+    fun getMetValueOfOwner(duration: Double, distance: Double): Double {
+        val speed = distance / duration
+        return if (speed < 3.2) {
+            2.5
+        } else if (speed < 4.8) {
+            3.3
+        } else if (speed < 5.6) {
+            4.3
+        } else {
+            5.0
+        }
     }
 }

@@ -15,8 +15,8 @@ data class OwnerResponse(
         fun create(appUser: AppUser, profile: AppUserProfile, dogs: List<Dog>): OwnerResponse {
             return OwnerResponse(
                 appUser.id,
-                profile.name,
-                appUser.email,
+                appUser.username,
+                profile.email,
                 myDogs = dogs.map { DogResponse.create(it) }
             )
         }

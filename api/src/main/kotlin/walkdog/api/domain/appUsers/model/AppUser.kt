@@ -11,8 +11,8 @@ import walkdog.api.domain.appUsers.model.dto.OwnerParam
 @Entity
 @Table(name = "app_users")
 class AppUser(
-    @Column(name = "email", nullable = false)
-    var email: String,
+    @Column(name = "username", nullable = false)
+    var username: String,
     @Column(name = "password", nullable = false)
     var password: String
 ) {
@@ -24,14 +24,14 @@ class AppUser(
     val isDeleted = "N"
 
     fun update(params: OwnerParam) {
-        this.email = params.email
+        this.username = params.username
         this.password = params.password
     }
 
     companion object {
         fun create(params: OwnerParam): AppUser {
             return AppUser(
-                params.email,
+                params.username,
                 params.password
             )
         }

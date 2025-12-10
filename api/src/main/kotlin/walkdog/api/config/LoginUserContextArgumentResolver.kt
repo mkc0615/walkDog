@@ -40,25 +40,25 @@ class LoginUserContextArgumentResolver(
                 val authentication = webRequest.userPrincipal as JwtAuthenticationToken
                 val jwt: Jwt = authentication.token
                 val username = jwt.claims["sub"] as String
-                val user = userRepository.findByEmail(username).validUser()
+                val user = userRepository.findByUsername(username).validUser()
                 val ip = webRequest.getNativeRequest(HttpServletRequest::class.java)
                     ?.let { getUserNetIp(it) }
                     ?: "IP UNKNOWN"
                 val mac = getUserMacAddress()
                 return user?.let {
-                    LoginUserDetail.create(it.id, it.email, ip, mac)
+                    LoginUserDetail.create(it.id, it.username, ip, mac)
                 }
             }
 
             is UsernamePasswordAuthenticationToken -> {
                 val authentication = webRequest.userPrincipal as UsernamePasswordAuthenticationToken
-                val user = userRepository.findByEmail(authentication.name).validUser()
+                val user = userRepository.findByUsername(authentication.name).validUser()
                 val ip = webRequest.getNativeRequest(HttpServletRequest::class.java)
                     ?.let { getUserNetIp(it) }
                     ?: "IP UNKNOWN"
                 val mac = getUserMacAddress()
                 return user?.let {
-                    LoginUserDetail.create(it.id, it.email, ip, mac)
+                    LoginUserDetail.create(it.id, it.username, ip, mac)
                 }
             }
 
