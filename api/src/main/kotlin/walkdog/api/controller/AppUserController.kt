@@ -4,8 +4,8 @@ import org.springframework.http.HttpStatus
 import org.springframework.security.crypto.password.PasswordEncoder
 import org.springframework.web.bind.annotation.*
 import walkdog.api.annotation.LoginUserContext
-import walkdog.api.domain.appUsers.model.dto.OwnerParam
-import walkdog.api.domain.appUsers.model.dto.OwnerResponse
+import walkdog.api.domain.appUsers.model.dto.AppUserParam
+import walkdog.api.domain.appUsers.model.dto.AppUserResponse
 import walkdog.api.domain.common.LoginUserDetail
 import walkdog.api.service.dogs.DogCommand
 import walkdog.api.service.users.AppUserCommand
@@ -21,7 +21,7 @@ class AppUserController(
 ) {
     @PostMapping("/register")
     @ResponseStatus(HttpStatus.CREATED)
-    fun registerUser(@RequestBody params: OwnerParam): OwnerParam {
+    fun registerUser(@RequestBody params: AppUserParam): AppUserParam {
         appUserCommand.create(params)
         return params;
     }
@@ -29,15 +29,15 @@ class AppUserController(
     @GetMapping("/me")
     fun getOwner(
         @LoginUserContext userContext: LoginUserDetail
-    ): OwnerResponse {
-        return appUserQuery.getAppUsersAndDogs(userContext.id)
+    ): AppUserResponse {
+        return appUserQuery.getAppUserProfile(userContext.id)
     }
 
     @PostMapping("/me")
     @ResponseStatus(HttpStatus.OK)
     fun updateOwner(
         @LoginUserContext userContext: LoginUserDetail,
-        @RequestBody params: OwnerParam
+        @RequestBody params: AppUserParam
     ) {
         appUserCommand.update(userContext.id, params)
     }

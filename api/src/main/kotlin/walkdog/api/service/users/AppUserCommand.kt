@@ -5,7 +5,7 @@ import org.springframework.security.crypto.password.PasswordEncoder
 import org.springframework.stereotype.Service
 import walkdog.api.domain.appUsers.AppUserRepository
 import walkdog.api.domain.appUsers.model.AppUser
-import walkdog.api.domain.appUsers.model.dto.OwnerParam
+import walkdog.api.domain.appUsers.model.dto.AppUserParam
 import walkdog.api.domain.walks.model.WalkStat
 import walkdog.api.domain.walks.repository.WalkStatRepository
 
@@ -16,7 +16,7 @@ class AppUserCommand(
     private val walkStatRepository: WalkStatRepository,
     private val passwordEncoder: PasswordEncoder
 ) {
-    fun create(params: OwnerParam) {
+    fun create(params: AppUserParam) {
         val encodedPassword = passwordEncoder.encode(params.password)
         params.password = encodedPassword
 
@@ -27,7 +27,7 @@ class AppUserCommand(
         walkStatRepository.save(walkStats)
     }
 
-    fun update(appUserId: Long, params: OwnerParam) {
+    fun update(appUserId: Long, params: AppUserParam) {
         // TODO: update user info
     }
 }

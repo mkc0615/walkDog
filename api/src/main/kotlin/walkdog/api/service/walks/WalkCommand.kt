@@ -24,7 +24,8 @@ class WalkCommand(
     private val walkStatRepository: WalkStatRepository,
     private val walkTrackRepository: WalkTrackRepository,
     private val walkDogRepository: WalkDogRepository,
-    private val dogRepository: DogRepository
+    private val dogRepository: DogRepository,
+    private val calorieCalculator: CalorieCalculator
 ) {
     fun createWalk(userId: Long, params: WalkCreateParam): WalkCreateResponse {
         val walk = Walk(userId, params)
@@ -62,31 +63,20 @@ class WalkCommand(
     }
 
     private fun updateWalkStats(appUserId: Long, params: WalkResultParam) {
-        val calories =  calculateCalories(appUserId, params)
+        val calories =  calorieCalculator.calculateOwnerCalories(params.duration, params.distance)
 
         val dogCalories = params.dogIds.map { dogId ->
-            calculateDogCalories(dogId, params.duration)
+            val dog = dogRepository.findById(dogId).orElse(null)
+            if (dog == null) {
+                throw IllegalArgumentException("cannot find dog")
+            }
+            calorieCalculator.calculateDogCalories(dog.dogBreed, params.duration, dog.weight)
         }
 
         val stats = walkStatRepository.findByAppUserId(appUserId)
         stats.updateCount()
         stats.updateTotals(params.duration, params.distance, calories)
         stats.updateAverages()
-    }
-
-    private fun calculateCalories(appUserId: Long, params: WalkResultParam): Double {
-        // calories = MET value x weight in kg x distance in km
-        val weight = 80.0
-        val metValue = getMetValueOfOwner(params.duration, params.distance)
-        return metValue * weight * params.distance
-    }
-
-    private fun calculateDogCalories(dogId: Long, duration: Double): Double {
-        // dog calories(kcal) = weight in kg x duration in hours x activity factor x speed factor
-        val dog = dogRepository.findById(dogId).orElseThrow()
-        val speedFactor = dog.dogBreed.speedFactor
-        val activityFactor = dog.dogBreed.activityFactor
-        return dog.weight * duration * activityFactor * speedFactor
     }
 
     fun updateDetails(walkId: Long, params: WalkUpdateParam) {
@@ -100,16 +90,5 @@ class WalkCommand(
         walkRepository.deleteById(id)
     }
 
-    fun getMetValueOfOwner(duration: Double, distance: Double): Double {
-        val speed = distance / duration
-        return if (speed < 3.2) {
-            2.5
-        } else if (speed < 4.8) {
-            3.3
-        } else if (speed < 5.6) {
-            4.3
-        } else {
-            5.0
-        }
-    }
+
 }
