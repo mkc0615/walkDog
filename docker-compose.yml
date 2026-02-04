@@ -1,0 +1,66 @@
+version: '3.8'
+
+services:
+#  postgres:
+#    image: postgres:16-alpine
+#    container_name: walkdog-postgres
+#    environment:
+#      POSTGRES_DB: database_name
+#      POSTGRES_USER: user
+#      POSTGRES_PASSWORD: password
+#    ports:
+#      - "5432:5432"
+#    volumes:
+#      - postgres-data:/var/lib/postgresql/data
+#    healthcheck:
+#      test: ["CMD-SHELL", "pg_isready -U user -d database_name"]
+#      interval: 10s
+#      timeout: 5s
+#      retries: 5
+#    networks:
+#      - walkdog-network
+
+  auth:
+    build:
+      context: .
+      dockerfile: auth/Dockerfile
+    container_name: walkdog-auth
+    environment:
+      DB_URL: jdbc:postgresql://host.docker.internal:5432/localdatabase?currentSchema=walk-dog-dev
+      DB_USERNAME: localuser
+      DB_PASSWORD: localpassword
+      SPRING_PROFILES_ACTIVE: ${SPRING_PROFILES_ACTIVE:-default}
+    ports:
+      - "9011:9011"
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
+    networks:
+      - walkdog-network
+    restart: unless-stopped
+
+  api:
+    build:
+      context: .
+      dockerfile: api/Dockerfile
+    container_name: walkdog-api
+    environment:
+      DB_URL: jdbc:postgresql://host.docker.internal:5432/localdatabase?currentSchema=walk-dog-dev
+      DB_USERNAME: localuser
+      DB_PASSWORD: localpassword
+      JWT_SET_URL: http://auth:9011/auth/.well-known/jwks.json
+      TOKEN_URL: http://auth:9011/oauth2/token
+      SPRING_PROFILES_ACTIVE: ${SPRING_PROFILES_ACTIVE:-default}
+    ports:
+      - "9010:9010"
+    depends_on:
+      auth:
+        condition: service_started
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
+    networks:
+      - walkdog-network
+    restart: unless-stopped
+
+networks:
+  walkdog-network:
+    driver: bridge

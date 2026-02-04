@@ -1,0 +1,46 @@
+# Git files
+.git
+.gitignore
+.gitattributes
+
+# Build outputs
+**/build/
+**/target/
+**/out/
+**/.gradle/
+
+# IDE files
+.idea/
+*.iml
+.vscode/
+*.swp
+*.swo
+*~
+
+# macOS
+.DS_Store
+
+# Log files
+*.log
+
+# Docker files (don't copy into context unnecessarily)
+Dockerfile
+docker-compose*.yml
+.dockerignore
+
+# Documentation
+*.md
+docs/
+
+# CI/CD
+.github/
+.gitlab-ci.yml
+
+# Test coverage
+**/coverage/
+**/.nyc_output/
+
+# Temporary files
+tmp/
+temp/
+*.tmp
